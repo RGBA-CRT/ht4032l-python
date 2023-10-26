@@ -2,25 +2,25 @@
 
 def GetDevice(index=0, dump=False):
 	try:
-		print "Probing LibUSB...",
-		from LibusbDriver import LibusbDriver
+		print("Probing LibUSB...", end=' ')
+		from .LibusbDriver import LibusbDriver
 		drv = LibusbDriver(index=index, dump=dump)
 		drv.open()
 		drv.close()
-		print "ok"
+		print("ok")
 		return drv
-	except Exception, e:
-		print e
+	except Exception as e:
+		print(e)
 		try:
-			print "Probing Hantek...",
-			from HTDriver import HTDriver
+			print("Probing Hantek...", end=' ')
+			from .HTDriver import HTDriver
 			drv = HTDriver(index=index, dump=dump)
 			drv.open()
 			drv.close()
-			print "ok"
+			print("ok")
 			return drv
-		except Exception, e:
-			print e
+		except Exception as e:
+			print(e)
 			return None
 
 __all__ = ["GetDevice"]

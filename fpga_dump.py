@@ -8,11 +8,11 @@ if len(argv)!=2:
 	exit("Usage: "+argv[0]+" <outfile.bin>")
 
 la = loader()
-print "Using", la.driver.name
+print("Using", la.driver.name)
 
 la.open()
 
-print "Loading SPI flash loader..."
+print("Loading SPI flash loader...")
 la.LoadFX2("SpiLoader.bin")
 
 fid = la.GetSpiFlashID()
@@ -24,13 +24,13 @@ if not fid in KnownFlashes:
 	la.close()
 	exit("Unsupported flash ID: %02X, %02X, %02X !" % fid)
 
-print "%s detected, size: %X" % KnownFlashes[fid]
+print("%s detected, size: %X" % KnownFlashes[fid])
 
-print "Reading..."
+print("Reading...")
 if not la.DumpSpiFlash(argv[1], KnownFlashes[fid][1]):
 	la.close()
 	exit("Read failed !")
 
-print "Done. Cycle LA power to return to normal mode."
+print("Done. Cycle LA power to return to normal mode.")
 
 la.close()

@@ -1,5 +1,5 @@
 """Hantek Windows driver wrapper"""
-from DriverTypes import DriverNotSupportedException
+from .DriverTypes import DriverNotSupportedException
 import os
 if os.name!="nt":
 	raise DriverNotSupportedException("Not a Windows platform")
@@ -146,16 +146,16 @@ class HTDriver(object):
 		buf = ctypes.create_string_buffer(size)
 		sts, outsize = self._ioctl(HT_IOCTL_READ, "\x01\x00\x00\x00", 4, ctypes.byref(buf), size)
 		if not sts:
-			return ""
+			return b""
 		rsp = buf.raw[0:outsize]
 		if self.dump:
-			print "<", hexlify(rsp)
+			print("<", hexlify(rsp))
 		return rsp
 
 	def write(self, data):
 		"""Write to OUT pipe"""
 		if self.dump:
-			print ">", hexlify(data)
+			print(">", hexlify(data))
 		sts, outsize = self._ioctl(HT_IOCTL_WRITE, "\x00\x00\x00\x00", 4, data, len(data))
 		if not sts:
 			return 0
@@ -164,7 +164,7 @@ class HTDriver(object):
 	def vendor_out(self, request, value, index, data):
 		"""EP0 vendor out"""
 		if self.dump:
-			print "%02X %04X %04X >" % (request, value, index), hexlify(data)
+			print("%02X %04X %04X >" % (request, value, index), hexlify(data))
 		sts, outsize = self._ioctl(HT_IOCTL_VENDOR, pack("<BHBBBHH", 0, 2, 0, request, 0, value, index), 10, data, len(data))
 		if not sts:
 			return 0
@@ -178,7 +178,7 @@ class HTDriver(object):
 			return ""
 		rsp = buf.raw[0:outsize]
 		if self.dump:
-			print "%02X %04X %04X <" % (request, value, index), hexlify(rsp)
+			print("%02X %04X %04X <" % (request, value, index), hexlify(rsp))
 		return rsp
 
 

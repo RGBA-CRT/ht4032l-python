@@ -3,7 +3,7 @@ import sys
 from HT4032L import loader
 
 la = loader()
-print "Using", la.driver.name
+print("Using", la.driver.name)
 
 la.open()
 

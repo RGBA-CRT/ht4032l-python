@@ -8,11 +8,11 @@ if len(argv)!=2:
 	exit("Usage: "+argv[0]+" <fpga.bin>")
 
 la = loader()
-print "Using", la.driver.name
+print("Using", la.driver.name)
 
 la.open()
 
-print "Loading SPI flash loader..."
+print("Loading SPI flash loader...")
 la.LoadFX2("SpiLoader.bin")
 
 fid = la.GetSpiFlashID()
@@ -24,18 +24,18 @@ if not fid in KnownFlashes:
 	la.close()
 	exit("Unsupported flash ID: %02X, %02X, %02X !" % fid)
 
-print KnownFlashes[fid], "detected"
+print(KnownFlashes[fid], "detected")
 
-print "Erasing..."
+print("Erasing...")
 if not la.EraseSpiFlash():
 	la.close()
 	exit("Erase failed !")
 
-print "Programming..."
+print("Programming...")
 if not la.ProgramSpiFlash(argv[1]):
 	la.close()
 	exit("Program failed !")
 
-print "Done. Cycle LA power to load new firmware."
+print("Done. Cycle LA power to load new firmware.")
 
 la.close()

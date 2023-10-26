@@ -1,6 +1,6 @@
 """Firmware service functions access"""
 from os.path import getsize
-from DriverFactory import GetDevice
+from .DriverFactory import GetDevice
 
 try:
 	from progressbar import ProgressBar
@@ -44,7 +44,7 @@ class loader(object):
 	def LoadFX2(self, fname):
 		"""Load and start FX2 plain binary firmware image"""
 		# reset CPU core
-		self.WriteMem(0xE600, "\x01") 
+		self.WriteMem(0xE600, b"\x01") 
 		# load in 0x40 bytes chunks
 		size = getsize(fname)
 		hf = open(fname, "rb")
@@ -59,7 +59,7 @@ class loader(object):
 		pb.finish()
 		hf.close()
 		# unreset CPU core and start loaded firmware
-		self.WriteMem(0xE600, "\x00") 
+		self.WriteMem(0xE600, b"\x00") 
 
 	########## FPGA flash access ################################
 
@@ -96,7 +96,7 @@ class loader(object):
 			if not self.WriteSpiFlash(addr, hf.read(chunk_size)+"\xFF"*(0x100-chunk_size)):
 				pb.finish()
 				hf.close()
-				print "Write failed at %X !" % (addr)
+				print("Write failed at %X !" % (addr))
 				return False
 			addr+=chunk_size
 			size-=chunk_size
@@ -116,7 +116,7 @@ class loader(object):
 			if data=="":
 				pb.finish()
 				hf.close()
-				print "Read failed at %X !" % (addr)
+				print("Read failed at %X !" % (addr))
 				return False
 			hf.write(data)
 			addr+=chunk_size

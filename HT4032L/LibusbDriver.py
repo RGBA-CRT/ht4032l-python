@@ -1,6 +1,6 @@
 """LibUSB driver wrapper"""
 # Requires libusb1 package. See https://pypi.org/project/libusb1
-from DriverTypes import DriverNotSupportedException
+from .DriverTypes import DriverNotSupportedException
 
 try:
 	import usb1
@@ -46,41 +46,41 @@ class LibusbDriver(object):
 	def read(self, size):
 		"""Read from IN pipe"""
 		if self.dump:
-			print "<",
+			print("<", end=' ')
 		data = self._fhandle.bulkRead(HT4032L_EP_IN, size)
 		if not data:
 			if self.dump:
-				print "NG"
-			return ""
-		data = "".join(map(chr, data))
+				print("NG")
+			return b""
+		# data = "".join(map(chr, data))
 		if self.dump:
-			print "[%X]" % (len(data)), hexlify(data)
+			print("[%X]" % (len(data)), hexlify(data))
 		return data
 
 	def write(self, data):
 		"""Write to OUT pipe"""
 		if self.dump:
-			print "> [%X]" % (len(data)), hexlify(data)
+			print("> [%X]" % (len(data)), hexlify(data))
 		return self._fhandle.bulkWrite(HT4032L_EP_OUT, data)
 					 
 	def vendor_out(self, request, value, index, data):
 		"""EP0 vendor out"""
 		if self.dump:
-			print "%02X %04X %04X >" % (request, value, index), hexlify(data)
+			print("%02X %04X %04X >" % (request, value, index), hexlify(data))
 		return self._fhandle.controlWrite(0x40, request, value, index, data)
 
 	def vendor_in(self, request, value, index, length):
 		"""EP0 vendor in"""
 		if self.dump:
-			print "%02X %04X %04X <" % (request, value, index),
+			print("%02X %04X %04X <" % (request, value, index), end=' ')
 		data = self._fhandle.controlRead(0x40, request, value, index, length)
 		if not data:
 			if self.dump:
-				print "NG"
+				print("NG")
 			return ""
 		data = "".join(map(chr, data))
 		if self.dump:
-			print "[%X]" % (len(data)), hexlify(data)
+			print("[%X]" % (len(data)), hexlify(data))
 		return data
 
 
